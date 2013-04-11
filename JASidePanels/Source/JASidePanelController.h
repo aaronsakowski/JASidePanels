@@ -25,6 +25,30 @@
 
 #import <UIKit/UIKit.h>
 
+/** Notification that gets posted when the underRight view will appear */
+extern NSString *const JASidePanelRightWillAppear;
+
+/** Notification that gets posted when the underLeft view will appear */
+extern NSString *const JASidePanelLeftWillAppear;
+
+/** Notification that gets posted when the underLeft view will disappear */
+extern NSString *const JASidePanelLeftWillDisappear;
+
+/** Notification that gets posted when the underRight view will disappear */
+extern NSString *const JASidePanelRightWillDisappear;
+
+/** Notification that gets posted when the top view is anchored to the left side of the screen */
+extern NSString *const JASidePanelRightDidAppear;
+
+/** Notification that gets posted when the top view is anchored to the right side of the screen */
+extern NSString *const JASidePanelLeftDidAppear;
+
+/** Notification that gets posted when the top view will be centered on the screen */
+extern NSString *const JASidePanelCenterWillAppear;
+
+/** Notification that gets posted when the top view is centered on the screen */
+extern NSString *const JASidePanelCenterDidAppear;
+
 typedef enum _JASidePanelStyle {
     JASidePanelSingleActive = 0,
     JASidePanelMultipleActive

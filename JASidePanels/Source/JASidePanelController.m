@@ -27,6 +27,15 @@
 #import "JASidePanelController.h"
 
 static char ja_kvoContext;
+NSString *const JASidePanelRightWillAppear    = @"JASidePanelRightWillAppear";
+NSString *const JASidePanelLeftWillAppear     = @"JASidePanelLeftWillAppear";
+NSString *const JASidePanelLeftWillDisappear  = @"JASidePanelLeftWillDisappear";
+NSString *const JASidePanelRightWillDisappear = @"JASidePanelRightWillDisappear";
+NSString *const JASidePanelRightDidAppear        = @"JASidePanelRightDidAppear";
+NSString *const JASidePanelLeftDidAppear       = @"JASidePanelLeftDidAppear";
+NSString *const JASidePanelCenterWillAppear            = @"JASidePanelCenterWillAppear";
+NSString *const JASidePanelCenterDidAppear             = @"JASidePanelCenterDidAppear";
+
 
 @interface JASidePanelController() {
     CGRect _centerPanelRestingFrame;		
@@ -782,19 +791,29 @@ static char ja_kvoContext;
 #pragma mark - Showing Panels
 
 - (void)_showLeftPanel:(BOOL)animated bounce:(BOOL)shouldBounce {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:JASidePanelLeftWillAppear object:nil];
+    });
     self.state = JASidePanelLeftVisible;
     [self _loadLeftPanel];
     
     [self _adjustCenterFrame];
     
     if (animated) {
-        [self _animateCenterPanel:shouldBounce completion:nil];
+        [self _animateCenterPanel:shouldBounce completion:^(BOOL finished) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[NSNotificationCenter defaultCenter] postNotificationName:JASidePanelLeftDidAppear object:nil];
+            });
+        }];
     } else {
         self.centerPanelContainer.frame = _centerPanelRestingFrame;	
         [self styleContainer:self.centerPanelContainer animate:NO duration:0.0f];
         if (self.style == JASidePanelMultipleActive) {
             [self _layoutSideContainers:NO duration:0.0f];
         }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:JASidePanelLeftDidAppear object:nil];
+        });
     }
     
     if (self.style == JASidePanelSingleActive) {
@@ -804,19 +823,29 @@ static char ja_kvoContext;
 }
 
 - (void)_showRightPanel:(BOOL)animated bounce:(BOOL)shouldBounce {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:JASidePanelRightWillAppear object:nil];
+    });
     self.state = JASidePanelRightVisible;
     [self _loadRightPanel];
     
     [self _adjustCenterFrame];
     
     if (animated) {
-        [self _animateCenterPanel:shouldBounce completion:nil];
+        [self _animateCenterPanel:shouldBounce completion:^(BOOL finished) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[NSNotificationCenter defaultCenter] postNotificationName:JASidePanelRightDidAppear object:nil];
+            });
+        }];
     } else {
         self.centerPanelContainer.frame = _centerPanelRestingFrame;	
         [self styleContainer:self.centerPanelContainer animate:NO duration:0.0f];
         if (self.style == JASidePanelMultipleActive) {
             [self _layoutSideContainers:NO duration:0.0f];
         }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:JASidePanelRightDidAppear object:nil];
+        });
     }
     
     if (self.style == JASidePanelSingleActive) {
@@ -826,12 +855,18 @@ static char ja_kvoContext;
 }
 
 - (void)_showCenterPanel:(BOOL)animated bounce:(BOOL)shouldBounce {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:JASidePanelCenterWillAppear object:nil];
+    });
     self.state = JASidePanelCenterVisible;
     
     [self _adjustCenterFrame];
     
     if (animated) {
         [self _animateCenterPanel:shouldBounce completion:^(__unused BOOL finished) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[NSNotificationCenter defaultCenter] postNotificationName:JASidePanelCenterDidAppear object:nil];
+            });
             self.leftPanelContainer.hidden = YES;
             self.rightPanelContainer.hidden = YES;
             [self _unloadPanels];
@@ -842,6 +877,9 @@ static char ja_kvoContext;
         if (self.style == JASidePanelMultipleActive) {
             [self _layoutSideContainers:NO duration:0.0f];
         }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:JASidePanelCenterDidAppear object:nil];
+        });
         self.leftPanelContainer.hidden = YES;
         self.rightPanelContainer.hidden = YES;
         [self _unloadPanels];
