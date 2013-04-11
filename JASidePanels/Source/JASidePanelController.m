@@ -38,7 +38,7 @@ NSString *const JASidePanelCenterDidAppear             = @"JASidePanelCenterDidA
 
 
 @interface JASidePanelController() {
-    CGRect _centerPanelRestingFrame;		
+//    CGRect _centerPanelRestingFrame;		
     CGPoint _locationBeforePan;
 }
 
@@ -55,6 +55,7 @@ NSString *const JASidePanelCenterDidAppear             = @"JASidePanelCenterDidA
 
 @implementation JASidePanelController
 
+@synthesize centerPanelRestingFrame = _centerPanelRestingFrame;
 @synthesize leftPanelContainer = _leftPanelContainer;
 @synthesize rightPanelContainer = _rightPanelContainer;
 @synthesize centerPanelContainer = _centerPanelContainer;

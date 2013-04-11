@@ -91,6 +91,8 @@ typedef enum _JASidePanelState {
 // style
 @property (nonatomic) JASidePanelStyle style; // default is JASidePanelSingleActive
 
+@property (nonatomic) CGRect centerPanelRestingFrame;
+
 // size the left panel based on % of total screen width
 @property (nonatomic) CGFloat leftGapPercentage; 
 
